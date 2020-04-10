@@ -20,8 +20,9 @@ class Observer():
         raise NotImplementedError
 
 
-class Event():
-
-    def __init__(self, topic, message='', **callback_kwargs):
+async def fire_event(topic, message='', **callback_kwargs):
+    try:
         for observer in Observer._observers[topic][message]:
-            observer.handle(**callback_kwargs)
+            await observer.handle(**callback_kwargs)
+    except KeyError:
+        pass  # TODO: add logging

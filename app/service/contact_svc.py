@@ -7,6 +7,7 @@ from app.objects.secondclass.c_instruction import Instruction
 from app.objects.secondclass.c_result import Result
 from app.utility.base_service import BaseService
 from app.utility.base_world import BaseWorld
+from app.utility.event import fire_event
 
 
 def report(func):
@@ -46,6 +47,7 @@ class ContactService(BaseService):
             await agent.heartbeat_modification(**kwargs)
             self.log.debug('Incoming %s beacon from %s' % (agent.contact, agent.paw))
             for result in results:
+                await fire_event('link', 'completed', agent=agent, pid=result['pid'])
                 await self._save(Result(**result))
             return agent, await self._get_instructions(agent)
         agent = await self.get_service('data_svc').store(
