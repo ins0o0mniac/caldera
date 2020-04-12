@@ -197,7 +197,8 @@ class Operation(BaseObject):
         try:
             report = dict(name=self.name, host_group=[a.display for a in self.agents],
                           start=self.start.strftime('%Y-%m-%d %H:%M:%S'),
-                          steps=[], finish=self.finish, planner=self.planner.name, adversary=self.adversary.display,
+                          steps=[], finish=self.finish, planner=self.planner.name if self.planner else '',
+                          adversary=self.adversary.display,
                           jitter=self.jitter, facts=[f.display for f in self.all_facts()])
             agents_steps = {a.paw: {'steps': []} for a in self.agents}
             for step in self.chain:
